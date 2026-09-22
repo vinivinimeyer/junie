@@ -1,0 +1,21 @@
+# Dependências e builds
+node_modules/
+web/dist/
+api/build/
+api/tmp/
+coverage/
+
+# Segredos e ambiente local
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Sistema / IDE
+.DS_Store
+.vscode/
+.idea/
+*.log
+
+# Vercel
+.vercel
