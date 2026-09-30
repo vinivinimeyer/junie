@@ -1,11 +1,12 @@
 <script setup>
 import { computed } from 'vue'
-import { misturar, tintaPara, MARCA_JUNIE } from '../lib/theme'
+import { misturar, MARCA_JUNIE } from '../lib/theme'
 
 /**
- * O objeto central da interface: um círculo com a luz das cores da marca.
- * As manchas giram devagar; a casca é vidro (brilho + borda interna).
- * Com movimento reduzido, fica parado.
+ * O objeto central da interface: uma esfera de vidro com um entardecer dentro.
+ * Céu na cor da marca, horizonte claro e um eclipse com borda na cor de
+ * destaque. `claro` vira a esfera branca fosca, para números e contrapontos.
+ * O eclipse respira devagar; com movimento reduzido, fica parado.
  */
 const props = defineProps({
   marca: { type: Object, default: () => MARCA_JUNIE },
@@ -13,48 +14,43 @@ const props = defineProps({
   tamanho: { type: String, default: '16rem' },
   /** Semente: orbes diferentes da mesma marca não ficam iguais. */
   semente: { type: Number, default: 0 },
+  claro: Boolean,
   parado: Boolean,
 })
 
-const cores = computed(() => {
-  const base = props.marca.corPrimaria ?? MARCA_JUNIE.corPrimaria
-  const destaque = props.marca.corDestaque ?? MARCA_JUNIE.corDestaque
-  return {
-    base,
-    claro: misturar(base, '#FFFFFF', 0.55),
-    nevoa: misturar(base, '#FFFFFF', 0.82),
-    destaque,
-    fundo: misturar(base, '#000000', 0.35),
+const fundo = computed(() => {
+  if (props.claro) {
+    return 'radial-gradient(circle at 34% 26%, #FFFFFF 0%, #F1F1F3 32%, #D9D9DE 68%, #B9B9C0 100%)'
   }
+  const base = props.marca.corPrimaria ?? MARCA_JUNIE.corPrimaria
+  const ceu = misturar(base, '#1C2036', 0.45)
+  const alto = misturar(base, '#5E6688', 0.55)
+  const nevoa = misturar(base, '#C8C6D0', 0.72)
+  return `linear-gradient(180deg, ${ceu} 0%, ${alto} 34%, ${nevoa} 56%, #B9B2B6 64%, #2A2630 86%, #121116 100%)`
 })
 
-const ang = computed(() => (props.semente * 137) % 360)
-const fundo = computed(() => {
-  const c = cores.value
-  return [
-    `radial-gradient(circle at 28% 24%, ${c.nevoa} 0%, transparent 42%)`,
-    `radial-gradient(circle at 78% 72%, ${c.destaque} 0%, transparent 46%)`,
-    `radial-gradient(circle at 18% 86%, ${c.fundo} 0%, transparent 50%)`,
-    `radial-gradient(circle at 60% 40%, ${c.claro} 0%, ${c.base} 70%)`,
-  ].join(',')
+const eclipse = computed(() => {
+  const d = props.marca.corDestaque ?? MARCA_JUNIE.corDestaque
+  const brasa = misturar(d, '#000000', 0.35)
+  const luz = misturar(d, '#FFFFFF', 0.35)
+  return `radial-gradient(ellipse 46% 27% at 50% 78%, #060608 0%, #060608 50%, ${brasa} 60%, ${d} 68%, ${luz} 75%, transparent 88%)`
 })
-const manchas = computed(() => {
-  const c = cores.value
-  return `conic-gradient(from ${ang.value}deg at 50% 50%, ${c.claro}, ${c.base}, ${c.destaque}, ${c.nevoa}, ${c.base}, ${c.claro})`
-})
-const texto = computed(() => tintaPara(misturar(cores.value.base, '#FFFFFF', 0.3)))
+
+const deslocamento = computed(() => `${((props.semente * 37) % 9) - 4}%`)
 </script>
 
 <template>
   <div
     class="orbe relative rounded-full isolate shrink-0 select-none [container-type:size]"
-    :style="{ width: tamanho, height: tamanho, background: fundo, color: texto }"
+    :class="claro ? 'text-[#111113]' : 'text-white'"
+    :style="{ width: tamanho, height: tamanho, background: fundo }"
   >
-    <div class="manchas absolute -inset-1/4 opacity-55 mix-blend-soft-light" :class="!parado && 'gira'" :style="{ background: manchas }" />
-    <div class="grao absolute inset-0 opacity-[.16] mix-blend-overlay pointer-events-none" />
-    <div class="lente pointer-events-none" aria-hidden="true" />
-    <div class="brilho pointer-events-none" :class="!parado && 'anda'" aria-hidden="true" />
-    <div class="relative z-10 h-full w-full flex flex-col items-center justify-center text-center p-[12%]">
+    <template v-if="!claro">
+      <div class="eclipse" :class="!parado && 'respira'" :style="{ background: eclipse, '--dx': deslocamento }" aria-hidden="true" />
+      <div class="nevoa" aria-hidden="true" />
+    </template>
+    <div class="aro" aria-hidden="true" />
+    <div class="relative z-10 h-full w-full flex flex-col items-center justify-center text-center p-[13%] pb-[22%]" :class="!claro && 'sombra-texto'">
       <slot />
     </div>
   </div>
@@ -64,37 +60,40 @@ const texto = computed(() => tintaPara(misturar(cores.value.base, '#FFFFFF', 0.3
 .orbe {
   overflow: hidden;
   contain: paint;
-  outline: 1px solid rgb(255 255 255 / 0.28);
-  outline-offset: -1px;
-  box-shadow:
-    inset 0 1px 2px rgb(255 255 255 / 0.35),
-    inset 0 -12px 22px rgb(0 0 0 / 0.22);
 }
-.manchas { filter: blur(28px); }
-.gira { animation: gira 38s linear infinite; }
-@keyframes gira { to { transform: rotate(360deg); } }
-.grao {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+.eclipse {
+  position: absolute;
+  inset: -6%;
+  filter: blur(calc(1.2cqw + 2px));
+  transform: translateX(var(--dx));
 }
-.lente {
+.nevoa {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-  background: radial-gradient(circle at 30% 18%, rgb(255 255 255 / 0.38), transparent 32%);
+  background:
+    radial-gradient(ellipse 70% 22% at 50% 60%, rgb(255 255 255 / 0.28), transparent 70%),
+    radial-gradient(circle at 50% 0%, rgb(0 0 0 / 0.25), transparent 55%);
   pointer-events: none;
 }
-.brilho {
+.aro {
   position: absolute;
-  inset: -40%;
-  z-index: 2;
-  background: conic-gradient(from 200deg, transparent 0 74%, rgb(255 255 255 / 0.55) 77%, transparent 80%);
-  opacity: 0.45;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
   pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.32),
+    inset 0 1.5px 3px rgb(255 255 255 / 0.4),
+    inset 0 -0.8cqw 3cqw rgb(255 255 255 / 0.12),
+    inset 0 0 6cqw rgb(0 0 0 / 0.18);
 }
-.anda { animation: anda 18s linear infinite; }
-@keyframes anda { to { transform: rotate(360deg); } }
+.sombra-texto { text-shadow: 0 1px 12px rgb(0 0 0 / 0.25); }
+.respira { animation: respira 9s var(--ease-in-out, ease-in-out) infinite alternate; }
+@keyframes respira {
+  from { transform: translateX(var(--dx)) translateY(0) scale(1); }
+  to { transform: translateX(var(--dx)) translateY(-3%) scale(1.07); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .gira, .anda { animation: none; }
+  .respira { animation: none; }
 }
 </style>

@@ -120,30 +120,37 @@ async function lancar(mesa, nome) {
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col px-5 md:px-10 pt-6" :class="itens.length ? 'pb-72 md:pb-60' : 'pb-16'">
-    <p v-if="mesaAlvo" class="text-xl mb-6 flex justify-between">
+  <div class="flex-1 flex flex-col px-5 md:px-8 pt-6" :class="itens.length ? 'pb-56 md:pb-40' : 'pb-16'">
+    <p v-if="mesaAlvo" class="pilula h-12 px-5 mb-5 flex items-center justify-between">
       <span>Para {{ nomeMesa(mesaAlvo) }}</span>
       <RouterLink to="/app" class="palavra fraco">Cancelar</RouterLink>
     </p>
 
-    <div v-if="carregando" class="space-y-6 pt-4" aria-busy="true">
-      <div v-for="n in 5" :key="n" class="h-8 bg-tinta/10 w-2/3" />
+    <div v-if="carregando" class="space-y-2 pt-4" aria-busy="true">
+      <div v-for="n in 5" :key="n" class="pilula h-[4.5rem]" />
     </div>
-    <p v-else-if="!produtos.length" class="text-2xl pt-10">
-      Nada no cardápio ainda. <RouterLink to="/app/cardapio" class="palavra underline underline-offset-8 decoration-4">Escrever cardápio</RouterLink>
+    <p v-else-if="!produtos.length" class="text-xl pt-10">
+      Nada no cardápio ainda. <RouterLink to="/app/cardapio" class="palavra underline underline-offset-4">Escrever cardápio</RouterLink>
     </p>
 
     <template v-else>
-      <Palavras v-model="aba" :itens="abas" tamanho="text-xl md:text-2xl" />
-      <ul class="mt-4">
-        <li v-for="p in visiveis" :key="p.id" class="flex items-center gap-4 regua-fina">
-          <button class="palavra flex-1 flex items-baseline gap-4 py-5 md:py-6 text-2xl md:text-3xl leading-tight min-w-0" @click="mudar(p, 1)">
-            <span class="w-10 shrink-0 numero" :class="!carrinho.get(p.id) && 'opacity-0'">{{ carrinho.get(p.id) ?? 0 }}</span>
-            <span class="truncate">{{ p.nome }}</span>
-            <span class="ml-auto fraco numero text-xl md:text-2xl shrink-0">{{ brl(p.preco).replace('R$', '').trim() }}</span>
+      <Palavras v-model="aba" :itens="abas" />
+      <ul class="mt-4 flex flex-col gap-2">
+        <li v-for="p in visiveis" :key="p.id" class="flex items-center gap-2">
+          <button
+            class="pilula flex-1 flex items-center gap-4 h-[4.5rem] px-6 min-w-0 text-left"
+            :class="carrinho.get(p.id) && 'pilula-ativa'"
+            @click="mudar(p, 1)"
+          >
+            <span class="w-6 shrink-0 numero text-lg" :class="!carrinho.get(p.id) && 'apagado'">{{ carrinho.get(p.id) ?? '+' }}</span>
+            <span class="text-[17px] truncate">{{ p.nome }}</span>
+            <span class="ml-auto flex flex-col items-end leading-tight shrink-0">
+              <span class="numero text-[17px]">{{ brl(p.preco).replace('R$', '').trim() }}</span>
+              <span class="apagado text-xs">Preço</span>
+            </span>
           </button>
           <button
-            class="palavra w-12 h-12 text-4xl leading-none shrink-0 transition-opacity"
+            class="pilula w-[4.5rem] h-[4.5rem] rounded-full text-2xl leading-none shrink-0"
             :class="!carrinho.get(p.id) && 'invisible'"
             :aria-label="`Tirar um ${p.nome}`"
             @click="mudar(p, -1)"
@@ -152,21 +159,21 @@ async function lancar(mesa, nome) {
       </ul>
     </template>
 
-    <!-- barra de total, como no Logico -->
+    <!-- barra de total: pílula clara flutuando sobre a lista -->
     <Transition name="surge">
-      <div v-if="itens.length" class="fixed inset-x-0 bottom-0 z-30 bg-tinta text-chao px-5 md:px-10 py-6 md:py-8 flex justify-between gap-6">
-        <div class="flex flex-col justify-between">
-          <span class="text-5xl md:text-7xl leading-none numero">{{ brl(total).replace(',00', '') }}</span>
-          <button class="palavra text-base mt-4 opacity-70" @click="carrinho.clear()">Limpar</button>
+      <div v-if="itens.length" class="fixed inset-x-3 md:left-[18.5rem] lg:left-[20.5rem] md:right-[4.5rem] bottom-3 md:bottom-[4.5rem] z-30 bg-tinta text-chao rounded-[2rem] p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.7)]">
+        <div class="flex items-baseline justify-between md:flex-col md:items-start gap-3">
+          <span class="text-4xl md:text-5xl leading-none numero font-medium">{{ brl(total).replace(',00', '') }}</span>
+          <button class="palavra text-sm opacity-60" @click="carrinho.clear()">Limpar</button>
         </div>
-        <div v-if="mesaAlvo" class="flex items-end">
-          <button class="palavra text-2xl md:text-3xl" :disabled="enviando" @click="lancar(mesaAlvo)">Lançar →</button>
+        <div v-if="mesaAlvo" class="flex">
+          <button class="h-12 px-6 rounded-full bg-chao text-tinta text-[15px] w-full md:w-auto disabled:opacity-30" :disabled="enviando" @click="lancar(mesaAlvo)">Lançar →</button>
         </div>
-        <div v-else class="flex flex-col items-end md:items-start gap-3 text-xl md:text-2xl">
-          <button class="palavra" :disabled="enviando" @click="tela = 'dinheiro'">Dinheiro</button>
-          <button class="palavra" :disabled="enviando" @click="vender('cartao')">Cartão</button>
-          <button class="palavra" :disabled="enviando" @click="tela = 'pix'">Pix</button>
-          <button v-if="mesas.length" class="palavra" :disabled="enviando" @click="tela = 'mesa'">Mesa</button>
+        <div v-else class="grid grid-cols-2 md:flex gap-2">
+          <button class="h-12 px-5 rounded-full bg-chao text-tinta text-[15px] transition-opacity hover:opacity-85 disabled:opacity-30" :disabled="enviando" @click="vender('cartao')">Cartão</button>
+          <button class="h-12 px-5 rounded-full bg-chao/10 text-[15px] transition-colors hover:bg-chao/20 disabled:opacity-30" :disabled="enviando" @click="tela = 'pix'">Pix</button>
+          <button class="h-12 px-5 rounded-full bg-chao/10 text-[15px] transition-colors hover:bg-chao/20 disabled:opacity-30" :disabled="enviando" @click="tela = 'dinheiro'">Dinheiro</button>
+          <button v-if="mesas.length" class="h-12 px-5 rounded-full bg-chao/10 text-[15px] transition-colors hover:bg-chao/20 disabled:opacity-30" :disabled="enviando" @click="tela = 'mesa'">Mesa</button>
         </div>
       </div>
     </Transition>
@@ -174,23 +181,23 @@ async function lancar(mesa, nome) {
     <!-- PIX: tela cheia na cor da marca, como no Logico -->
     <Tela v-if="tela === 'pix'" cheia rotulo="Pix" @fechar="tela = null">
       <div class="min-h-[100dvh] flex flex-col items-center justify-center gap-8 px-5 py-20 text-center">
-        <span class="text-5xl md:text-7xl numero">{{ brl(total) }}</span>
-        <img v-if="sessao.tenant.chavePix && pix" :src="pix" alt="QR Code Pix" class="w-64 h-64 md:w-80 md:h-80 bg-white p-3" />
+        <span class="text-5xl md:text-6xl numero font-medium">{{ brl(total) }}</span>
+        <img v-if="sessao.tenant.chavePix && pix" :src="pix" alt="QR Code Pix" class="w-64 h-64 md:w-80 md:h-80 bg-white p-4 rounded-[1.75rem]" />
         <p v-else-if="!sessao.tenant.chavePix" class="text-xl max-w-sm">Cadastre a chave Pix em Marca para mostrar o QR aqui.</p>
-        <button class="palavra text-2xl md:text-3xl" :disabled="enviando" @click="vender('pix')">Pix recebido →</button>
+        <button class="h-14 px-8 rounded-full bg-marca-tinta text-marca text-lg font-medium disabled:opacity-30" :disabled="enviando" @click="vender('pix')">Pix recebido →</button>
       </div>
     </Tela>
 
     <!-- DINHEIRO -->
     <Tela v-if="tela === 'dinheiro'" rotulo="Dinheiro" @fechar="tela = null">
       <form class="min-h-[100dvh] flex flex-col justify-center gap-8 px-5 md:px-10 py-20 max-w-3xl" @submit.prevent="vender('dinheiro')">
-        <p class="text-3xl fraco numero">Total {{ brl(total) }}</p>
+        <p class="text-xl fraco numero">Total {{ brl(total) }}</p>
         <label class="flex items-baseline gap-4">
-          <span class="text-3xl md:text-5xl">Recebi</span>
-          <input v-model="recebido" type="number" step="0.01" min="0" autofocus aria-label="Valor recebido" class="flex-1 min-w-0 bg-transparent regua outline-none text-5xl md:text-8xl font-bold numero text-tinta" placeholder="0" />
+          <span class="text-3xl md:text-4xl">Recebi</span>
+          <input v-model="recebido" type="number" step="0.01" min="0" autofocus aria-label="Valor recebido" class="flex-1 min-w-0 bg-transparent regua outline-none text-5xl md:text-6xl font-medium numero text-tinta" placeholder="0" />
         </label>
-        <p class="text-4xl md:text-6xl numero" :class="troco < 0 && 'apagado'">Troco {{ brl(Math.max(troco, 0)) }}</p>
-        <button class="bloco h-20 text-2xl aberto flex items-center justify-between px-8" :disabled="enviando">
+        <p class="text-3xl md:text-5xl numero" :class="troco < 0 && 'apagado'">Troco {{ brl(Math.max(troco, 0)) }}</p>
+        <button class="bloco h-16 text-lg flex items-center justify-between px-8" :disabled="enviando">
           <span>Confirmar</span><span aria-hidden="true">→</span>
         </button>
       </form>
@@ -199,7 +206,7 @@ async function lancar(mesa, nome) {
     <!-- MESA: mesas redondas -->
     <Tela v-if="tela === 'mesa'" rotulo="Lançar na mesa" @fechar="tela = null">
       <div class="px-5 md:px-10 pt-24 pb-44">
-        <p class="text-3xl md:text-4xl mb-10">Qual mesa?</p>
+        <h2 class="text-3xl md:text-4xl mb-10">Qual mesa?</h2>
         <div class="grid grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] gap-5">
           <button
             v-for="m in mesas"
@@ -215,7 +222,7 @@ async function lancar(mesa, nome) {
       </div>
       <div v-if="escolhida" class="fixed inset-x-0 bottom-0 vidro px-5 md:px-10 py-6 flex flex-col md:flex-row gap-4">
         <input v-model="cliente" class="campo md:max-w-md" placeholder="nome do cliente (opcional)" aria-label="Nome do cliente" />
-        <button class="bloco h-14 px-8 flex-1 text-xl aberto flex items-center justify-between" :disabled="enviando" @click="lancar(escolhida, cliente || null)">
+        <button class="bloco h-14 px-8 flex-1 text-lg flex items-center justify-between" :disabled="enviando" @click="lancar(escolhida, cliente || null)">
           <span>Lançar na {{ escolhida.numero }}</span><span aria-hidden="true">→</span>
         </button>
       </div>

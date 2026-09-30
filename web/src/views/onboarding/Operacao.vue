@@ -144,10 +144,10 @@ const escala = (i) => Math.max(i.estoqueMinimo * 3, i.quantidade, 1)
         <section v-if="PASSOS[passo] === 'comeco'" key="comeco" class="flex flex-col gap-10 max-w-5xl">
           <h1 class="text-2xl md:text-3xl">Por onde começar?</h1>
           <div>
-            <button class="palavra w-full regua py-6 md:py-8 text-3xl md:text-6xl leading-none" :disabled="ocupado" @click="usarModelo(sugerido)">
+            <button class="palavra w-full regua py-6 md:py-8 text-2xl md:text-4xl leading-none" :disabled="ocupado" @click="usarModelo(sugerido)">
               {{ ocupado ? 'Montando…' : `Cardápio de ${sugerido.nome}` }}
             </button>
-            <button class="palavra w-full regua py-6 md:py-8 text-3xl md:text-6xl leading-none" :disabled="ocupado" @click="passo = 1">Em branco</button>
+            <button class="palavra w-full regua py-6 md:py-8 text-2xl md:text-4xl leading-none" :disabled="ocupado" @click="passo = 1">Em branco</button>
           </div>
           <div class="flex flex-wrap gap-x-6 gap-y-2 text-lg">
             <span class="fraco">ou</span>
@@ -173,9 +173,9 @@ const escala = (i) => Math.max(i.estoqueMinimo * 3, i.quantidade, 1)
           </div>
           <template v-if="modoMesa !== 'balcao'">
             <div class="flex items-center gap-8">
-              <button class="palavra text-6xl w-14" aria-label="Menos" :disabled="mesas <= Math.max(1, dados.mesas.length)" @click="mesas--">−</button>
-              <span class="text-8xl md:text-[9rem] leading-none numero min-w-[2ch] text-center">{{ mesas }}</span>
-              <button class="palavra text-6xl w-14" aria-label="Mais" :disabled="mesas >= 60" @click="mesas++">+</button>
+              <button class="palavra text-5xl w-14" aria-label="Menos" :disabled="mesas <= Math.max(1, dados.mesas.length)" @click="mesas--">−</button>
+              <span class="text-7xl md:text-8xl leading-none numero min-w-[2ch] text-center">{{ mesas }}</span>
+              <button class="palavra text-5xl w-14" aria-label="Mais" :disabled="mesas >= 60" @click="mesas++">+</button>
             </div>
             <div class="flex flex-wrap gap-3" aria-hidden="true">
               <span

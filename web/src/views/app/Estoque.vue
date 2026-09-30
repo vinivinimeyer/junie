@@ -79,11 +79,11 @@ function depoisDeSalvar() {
 </script>
 
 <template>
-  <div class="flex-1 px-5 md:px-10 pt-8 pb-16">
+  <div class="flex-1 px-5 md:px-8 pt-8 pb-16">
     <p v-if="visao" class="text-2xl md:text-4xl leading-tight max-w-[34ch] mb-10" style="text-wrap: balance">{{ frase }}</p>
     <div v-else class="h-24 max-w-xl bg-tinta/10 mb-10" />
 
-    <Palavras v-model="aba" :itens="abas" tamanho="text-lg md:text-xl" class="mb-8" />
+    <Palavras v-model="aba" :itens="abas" class="mb-8" />
 
     <template v-if="visao">
       <section v-if="aba === 'potes'">
@@ -96,7 +96,7 @@ function depoisDeSalvar() {
               <template v-if="PALAVRA[i.status]"> · {{ PALAVRA[i.status] }}</template>
             </span>
           </button>
-          <button class="palavra aspect-square w-28 mx-auto rounded-full flex items-center justify-center text-4xl" style="border: 3px dashed rgb(var(--tinta) / .4)" aria-label="Novos insumos" @click="novos = ''">+</button>
+          <button class="palavra aspect-square w-28 mx-auto rounded-full vidro-disco flex items-center justify-center text-3xl fraco" aria-label="Novos insumos" @click="novos = ''">+</button>
         </div>
         <p class="apagado text-sm mt-12 max-w-xl normal-case font-semibold">A linha tracejada é o mínimo. “d” é quantos dias dura no ritmo das últimas duas semanas.</p>
       </section>

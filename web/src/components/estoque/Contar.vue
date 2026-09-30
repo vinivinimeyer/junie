@@ -34,7 +34,7 @@ async function fechar() {
     <div v-for="i in itens" :key="i.id" class="flex items-baseline gap-4 py-3 regua-fina">
       <span class="flex-1 text-xl truncate">{{ i.nome }}</span>
       <span class="fraco numero hidden sm:inline">{{ qtd(i.quantidade, i.unidade) }}</span>
-      <input v-model="contagem[i.id]" type="number" step="any" min="0" :aria-label="`Contagem de ${i.nome}`" placeholder="—" class="w-24 bg-transparent regua-fina outline-none text-2xl font-bold numero text-right text-tinta placeholder:text-tinta/30" />
+      <input v-model="contagem[i.id]" type="number" step="any" min="0" :aria-label="`Contagem de ${i.nome}`" placeholder="—" class="w-24 bg-transparent regua-fina outline-none text-2xl font-medium numero text-right text-tinta placeholder:text-tinta/30" />
       <span class="w-8 fraco">{{ i.unidade }}</span>
       <span class="w-24 text-right numero" :class="dif(i) < 0 ? 'text-perigo' : 'fraco'">{{ dif(i) === null || dif(i) === 0 ? '' : `${dif(i) > 0 ? '+' : ''}${qtd(dif(i), i.unidade)}` }}</span>
     </div>

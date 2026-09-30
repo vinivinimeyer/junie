@@ -63,8 +63,8 @@ async function fechar(forma) {
 </script>
 
 <template>
-  <div class="flex-1 px-5 md:px-10 pt-6 pb-16">
-    <p class="text-xl fraco mb-8 numero">{{ brl(emAberto) }} em aberto</p>
+  <div class="flex-1 px-5 md:px-8 pt-6 pb-16">
+    <p class="fraco mb-8 numero">{{ brl(emAberto) }} em aberto</p>
 
     <div v-if="carregando" class="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-6" aria-busy="true">
       <div v-for="n in 8" :key="n" class="aspect-square rounded-full vidro-disco" />
@@ -87,14 +87,14 @@ async function fechar(forma) {
           <span class="text-xs md:text-sm numero">{{ brl(m.total) }}</span>
           <span class="text-xs opacity-75 mt-1 hidden md:block">{{ haQuanto(m.abertaEm) }}</span>
         </Orbe>
-        <span v-else class="vidro-disco absolute inset-0 rounded-full flex items-center justify-center text-3xl md:text-4xl numero">{{ m.numero }}</span>
+        <span v-else class="vidro-disco absolute inset-0 rounded-full flex items-center justify-center text-2xl md:text-3xl numero fraco">{{ m.numero }}</span>
         <span v-if="prontos(m)" class="absolute top-[6%] right-[6%] w-9 h-9 rounded-full bg-destaque text-destaque-tinta flex items-center justify-center text-sm numero" :title="`${prontos(m)} pronto`">{{ prontos(m) }}</span>
       </button>
     </div>
 
     <Tela v-if="aberta" :rotulo="nome(aberta)" @fechar="abertaId = null">
       <div class="px-5 md:px-10 pt-20 pb-60 max-w-3xl">
-        <h1 class="text-5xl md:text-7xl leading-none">{{ nome(aberta) }}</h1>
+        <h1 class="text-4xl md:text-5xl leading-none">{{ nome(aberta) }}</h1>
         <p class="fraco text-lg mt-3">Mesa {{ aberta.numero }} · há {{ haQuanto(aberta.abertaEm) }}</p>
         <ul class="mt-10">
           <li v-for="i in aberta.itens" :key="i.id" class="flex items-baseline gap-4 py-4 regua-fina text-xl md:text-2xl">
@@ -107,10 +107,10 @@ async function fechar(forma) {
         </ul>
         <RouterLink :to="`/app?mesa=${aberta.id}`" class="palavra inline-block text-xl mt-6">+ Itens</RouterLink>
       </div>
-      <div class="fixed inset-x-0 bottom-0 bg-tinta text-chao px-5 md:px-10 py-6 md:py-8 flex justify-between gap-6">
-        <span class="text-5xl md:text-7xl leading-none numero">{{ brl(aberta.total).replace(',00', '') }}</span>
-        <div class="flex flex-col items-end md:items-start gap-3 text-xl md:text-2xl">
-          <button v-for="(r, f) in FORMAS" :key="f" class="palavra" :disabled="fechando" @click="fechar(f)">{{ r }}</button>
+      <div class="fixed inset-x-3 md:inset-x-10 bottom-3 md:bottom-8 md:max-w-3xl bg-tinta text-chao rounded-[2rem] p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <span class="text-4xl md:text-5xl leading-none numero font-medium">{{ brl(aberta.total).replace(',00', '') }}</span>
+        <div class="grid grid-cols-3 md:flex gap-2">
+          <button v-for="(r, f) in FORMAS" :key="f" class="h-12 px-5 rounded-full bg-chao/10 text-[15px] transition-colors hover:bg-chao/20 disabled:opacity-30" :disabled="fechando" @click="fechar(f)">{{ r }}</button>
         </div>
       </div>
     </Tela>

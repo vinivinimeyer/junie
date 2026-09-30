@@ -71,19 +71,19 @@ async function salvarAjustes() {
       </div>
 
       <div class="min-w-0">
-        <h1 class="text-4xl md:text-6xl leading-none">{{ insumo.nome }}</h1>
+        <h1 class="text-3xl md:text-5xl leading-none">{{ insumo.nome }}</h1>
         <div class="flex gap-8 mt-10 text-2xl md:text-3xl" role="radiogroup" aria-label="O que aconteceu">
           <button v-for="[id, r] in TIPOS" :key="id" role="radio" :aria-checked="form.tipo === id" :class="form.tipo !== id && 'apagado hover:opacity-70'" @click="form.tipo = id">{{ r }}</button>
         </div>
 
         <form class="mt-8 flex flex-col gap-6" @submit.prevent="registrar">
           <label class="flex items-baseline gap-4">
-            <input v-model="form.quantidade" type="number" step="any" min="0" autofocus :aria-label="`Quantidade em ${insumo.unidade}`" class="w-48 bg-transparent regua outline-none text-6xl font-bold numero text-tinta" placeholder="0" />
+            <input v-model="form.quantidade" type="number" step="any" min="0" autofocus :aria-label="`Quantidade em ${insumo.unidade}`" class="w-48 bg-transparent regua outline-none text-5xl font-medium numero text-tinta" placeholder="0" />
             <span class="text-3xl fraco">{{ insumo.unidade }}</span>
           </label>
           <label v-if="form.tipo === 'entrada'" class="flex items-baseline gap-3 text-xl">
             <span class="fraco">a R$</span>
-            <input v-model="form.custo" type="number" step="any" min="0" aria-label="Custo por unidade" class="w-32 bg-transparent regua-fina outline-none font-bold numero text-tinta text-2xl" />
+            <input v-model="form.custo" type="number" step="any" min="0" aria-label="Custo por unidade" class="w-32 bg-transparent regua-fina outline-none font-medium numero text-tinta text-2xl" />
             <span class="fraco">por {{ insumo.unidade }}</span>
           </label>
           <div v-if="form.tipo === 'perda'" class="flex flex-wrap gap-x-6 gap-y-2 text-xl" role="radiogroup" aria-label="Motivo">

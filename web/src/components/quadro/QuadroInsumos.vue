@@ -16,7 +16,7 @@ const lido = computed(() => lerInsumos(texto.value))
         v-model="texto"
         spellcheck="false"
         rows="12"
-        class="w-full min-h-[40vh] bg-transparent text-tinta text-xl md:text-2xl leading-[1.55] font-bold resize-none outline-none rounded-r p-5"
+        class="w-full min-h-[40vh] bg-transparent text-tinta text-xl md:text-2xl leading-[1.55] font-medium resize-none outline-none rounded-[var(--raio)] p-5"
         style="border: 4px solid rgb(var(--tinta))"
         :placeholder="'Leite integral 12 l\nCafé em grão 3 kg\nCopo 300 ml 150 un mín 50'"
       />

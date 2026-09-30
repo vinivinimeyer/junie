@@ -48,7 +48,7 @@ async function alternarCozinha(c) {
 </script>
 
 <template>
-  <div class="flex-1 px-5 md:px-10 pt-8 pb-40">
+  <div class="flex-1 px-5 md:px-8 pt-8 pb-40">
     <div class="flex gap-8 text-lg md:text-xl mb-10" role="tablist">
       <button role="tab" :aria-selected="modo === 'quadro'" :class="modo !== 'quadro' && 'apagado hover:opacity-70'" @click="modo = 'quadro'">Quadro</button>
       <button role="tab" :aria-selected="modo === 'fichas'" :class="modo !== 'fichas' && 'apagado hover:opacity-70'" @click="modo = 'fichas'">O que cada um leva</button>

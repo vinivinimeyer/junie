@@ -68,8 +68,8 @@ async function cancelar(v) {
 </script>
 
 <template>
-  <div class="flex-1 px-5 md:px-10 pt-8 pb-16">
-    <Palavras v-model="periodo" :itens="PERIODOS" tamanho="text-lg md:text-xl" class="mb-8" />
+  <div class="flex-1 px-5 md:px-8 pt-8 pb-16">
+    <Palavras v-model="periodo" :itens="PERIODOS" class="mb-8" />
 
     <div class="grid lg:grid-cols-[auto_1fr] gap-10 lg:gap-16 items-center">
       <Orbe :marca="sessao.tenant" tamanho="min(84vw, 24rem)" class="mx-auto lg:mx-0">

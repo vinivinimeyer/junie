@@ -17,7 +17,7 @@ export default {
         destaque: { DEFAULT: v('destaque'), tinta: v('destaque-tinta') },
         perigo: v('perigo'),
       },
-      borderRadius: { r: 'var(--raio)' },
+      borderRadius: { marca: 'var(--raio)' },
       fontFamily: { sans: ['var(--fonte)'] },
       borderWidth: { 3: '3px' },
     },

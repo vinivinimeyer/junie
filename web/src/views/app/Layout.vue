@@ -50,43 +50,57 @@ async function encerrar() {
 </script>
 
 <template>
-  <div v-if="sessao.tenant" class="min-h-[100dvh] flex flex-col">
-    <header class="px-5 md:px-10 pt-5 md:pt-7">
-      <div class="flex items-center justify-between gap-4 mb-5 md:mb-7">
-        <Selo :marca="sessao.tenant" :altura="26" />
-        <button class="rounded-full transition-transform duration-200 hover:scale-105 active:scale-95" aria-label="Menu" @click="menu = true">
-          <Orbe :marca="sessao.tenant" tamanho="2.75rem" />
+  <div v-if="sessao.tenant" class="moldura">
+    <div class="painel relative flex flex-col md:flex-row">
+      <aside class="md:w-56 lg:w-64 shrink-0 px-5 md:px-8 pt-5 md:pt-8 md:pb-8 flex md:flex-col items-center md:items-start justify-between gap-4">
+        <Selo :marca="sessao.tenant" :altura="24" />
+        <div class="hidden md:block mt-auto space-y-3">
+          <RouterLink v-if="!onboardingCompleto()" to="/configurar" class="palavra block text-sm text-destaque">Terminar a configuração →</RouterLink>
+          <p class="fraco text-sm leading-snug max-w-[18ch]">{{ sessao.user?.nome }} no {{ sessao.tenant.nome }}.</p>
+        </div>
+        <button class="md:hidden rounded-full transition-transform duration-200 active:scale-95" aria-label="Menu" @click="menu = true">
+          <Orbe :marca="sessao.tenant" tamanho="2.5rem" />
         </button>
-      </div>
-      <nav class="flex gap-6 md:gap-10 overflow-x-auto -mx-5 px-5 md:mx-0 md:px-0 [scrollbar-width:none]" aria-label="Seções">
-        <RouterLink
-          v-for="s in SECOES"
-          :key="s.to"
-          :to="s.to"
-          class="whitespace-nowrap text-[26px] md:text-[34px] leading-none pb-3 transition-opacity duration-150"
-          :class="ativa(s.to) ? '' : 'apagado hover:opacity-70'"
-          :aria-current="ativa(s.to) ? 'page' : undefined"
-        >
-          {{ s.rotulo }}<sup v-if="s.alerta && alertasEstoque" class="text-destaque text-[0.5em] ml-1 numero">{{ alertasEstoque }}</sup>
-        </RouterLink>
-      </nav>
-      <RouterLink v-if="!onboardingCompleto()" to="/configurar" class="palavra block text-destaque text-base mt-2">Terminar a configuração →</RouterLink>
-    </header>
+      </aside>
 
-    <main class="flex-1 flex flex-col">
-      <RouterView v-slot="{ Component }">
-        <Transition name="surge" mode="out-in"><component :is="Component" /></Transition>
-      </RouterView>
-    </main>
+      <div class="flex-1 min-w-0 flex flex-col">
+        <header class="px-5 md:px-8 pt-4 md:pt-7 flex items-center justify-between gap-4">
+          <nav class="flex gap-1 overflow-x-auto -mx-5 px-5 md:mx-0 md:px-0 [scrollbar-width:none]" aria-label="Seções">
+            <RouterLink
+              v-for="s in SECOES"
+              :key="s.to"
+              :to="s.to"
+              class="whitespace-nowrap rounded-full h-10 px-4 flex items-center text-[15px] transition-colors duration-150"
+              :class="ativa(s.to) ? 'pilula-ativa text-tinta' : 'fraco hover:text-tinta'"
+              :aria-current="ativa(s.to) ? 'page' : undefined"
+            >
+              {{ s.rotulo }}<sup v-if="s.alerta && alertasEstoque" class="text-destaque text-[0.7em] ml-1 numero">{{ alertasEstoque }}</sup>
+            </RouterLink>
+          </nav>
+          <button class="hidden md:block rounded-full transition-transform duration-200 hover:scale-105 active:scale-95 shrink-0" aria-label="Menu" @click="menu = true">
+            <Orbe :marca="sessao.tenant" tamanho="2.75rem" />
+          </button>
+        </header>
+        <RouterLink v-if="!onboardingCompleto()" to="/configurar" class="md:hidden palavra block text-destaque text-sm px-5 mt-3">Terminar a configuração →</RouterLink>
+
+        <main class="flex-1 flex flex-col">
+          <RouterView v-slot="{ Component }">
+            <Transition name="surge" mode="out-in"><component :is="Component" /></Transition>
+          </RouterView>
+        </main>
+      </div>
+    </div>
 
     <Tela v-if="menu" rotulo="Menu" @fechar="menu = false">
-      <div class="min-h-[100dvh] px-5 md:px-10 pt-24 pb-10 flex flex-col">
-        <p class="fraco text-lg mb-6 entra" style="--i: 0">{{ sessao.user?.nome }} · {{ sessao.tenant.nome }}</p>
-        <RouterLink to="/app/cardapio" class="palavra regua py-5 md:py-7 text-4xl md:text-6xl leading-none entra" style="--i: 1">Cardápio</RouterLink>
-        <RouterLink to="/marca" class="palavra regua py-5 md:py-7 text-4xl md:text-6xl leading-none entra" style="--i: 2">Marca</RouterLink>
-        <RouterLink to="/configurar" class="palavra regua py-5 md:py-7 text-4xl md:text-6xl leading-none entra" style="--i: 3">Configuração</RouterLink>
-        <button class="palavra regua py-5 md:py-7 text-4xl md:text-6xl leading-none entra" style="--i: 4" @click="copiarLink">Link da equipe</button>
-        <button class="palavra py-5 md:py-7 text-4xl md:text-6xl leading-none entra" style="--i: 5" @click="encerrar">Sair</button>
+      <div class="min-h-[100dvh] px-5 md:px-10 pt-24 pb-10 flex flex-col max-w-xl">
+        <p class="fraco mb-6 entra" style="--i: 0">{{ sessao.user?.nome }} · {{ sessao.tenant.nome }}</p>
+        <div class="flex flex-col gap-2">
+          <RouterLink to="/app/cardapio" class="pilula h-16 px-6 flex items-center justify-between text-xl entra" style="--i: 1">Cardápio <span class="fraco" aria-hidden="true">→</span></RouterLink>
+          <RouterLink to="/marca" class="pilula h-16 px-6 flex items-center justify-between text-xl entra" style="--i: 2">Marca <span class="fraco" aria-hidden="true">→</span></RouterLink>
+          <RouterLink to="/configurar" class="pilula h-16 px-6 flex items-center justify-between text-xl entra" style="--i: 3">Configuração <span class="fraco" aria-hidden="true">→</span></RouterLink>
+          <button class="pilula h-16 px-6 flex items-center justify-between text-xl entra" style="--i: 4" @click="copiarLink">Link da equipe <span class="fraco text-base">Copiar</span></button>
+        </div>
+        <button class="palavra fraco text-lg mt-8 entra" style="--i: 5" @click="encerrar">Sair</button>
         <p v-if="modoDemo" class="apagado text-sm mt-auto pt-10">Demonstração: os dados ficam neste navegador.</p>
       </div>
     </Tela>

@@ -51,7 +51,7 @@ const mesa = (i) => i.mesa?.nomeCliente || i.mesa?.rotulo || `Mesa ${i.mesa?.num
 </script>
 
 <template>
-  <div class="flex-1 px-5 md:px-10 pt-8 pb-16 grid md:grid-cols-3 gap-10 md:gap-8 items-start">
+  <div class="flex-1 px-5 md:px-8 pt-8 pb-16 grid md:grid-cols-3 gap-10 md:gap-8 items-start">
     <section v-for="col in COLUNAS" :key="col.status">
       <h2 class="regua text-2xl md:text-3xl pb-3 flex justify-between">
         <span>{{ col.titulo }}</span><span class="numero" :class="!por[col.status].length && 'apagado'">{{ por[col.status].length }}</span>

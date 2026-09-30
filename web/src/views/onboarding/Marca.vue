@@ -204,7 +204,7 @@ function voltar() {
             v-model="marca.nome"
             autofocus
             autocomplete="organization"
-            class="w-full bg-transparent regua outline-none text-5xl md:text-8xl pb-3 font-bold uppercase text-tinta placeholder:text-tinta/25"
+            class="w-full bg-transparent regua outline-none text-4xl md:text-6xl pb-3 font-medium text-tinta placeholder:text-tinta/25"
             placeholder="Café Aurora"
           />
           <div class="flex flex-wrap gap-x-8 gap-y-3 text-2xl md:text-3xl" role="radiogroup" aria-label="Segmento">
@@ -289,9 +289,9 @@ function voltar() {
 
           <template v-if="marca.logo">
             <div class="flex items-center gap-8" role="group" aria-label="Tamanho da logo">
-              <button class="palavra text-5xl w-12" aria-label="Menor" :disabled="marca.logoEscala <= ESCALA_MIN" @click="mudarEscala(-0.1)">−</button>
-              <span class="text-5xl md:text-6xl leading-none numero min-w-[3ch] text-center">{{ Math.round((marca.logoEscala || 1) * 100) }}</span>
-              <button class="palavra text-5xl w-12" aria-label="Maior" :disabled="marca.logoEscala >= ESCALA_MAX" @click="mudarEscala(0.1)">+</button>
+              <button class="palavra text-4xl w-12" aria-label="Menor" :disabled="marca.logoEscala <= ESCALA_MIN" @click="mudarEscala(-0.1)">−</button>
+              <span class="text-4xl md:text-5xl leading-none numero min-w-[3ch] text-center">{{ Math.round((marca.logoEscala || 1) * 100) }}</span>
+              <button class="palavra text-4xl w-12" aria-label="Maior" :disabled="marca.logoEscala >= ESCALA_MAX" @click="mudarEscala(0.1)">+</button>
             </div>
             <p class="fraco text-lg text-center">Arraste no círculo. Role ou use + − para o tamanho.</p>
             <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-lg">
@@ -320,7 +320,7 @@ function voltar() {
               :class="marca.fonte === f.nome ? '' : 'opacity-35 hover:opacity-70'"
               @click="marca.fonte = f.nome"
             >
-              <span class="text-4xl md:text-7xl leading-none truncate" :style="{ fontFamily: `${f.css}, sans-serif` }">{{ marca.nome }}</span>
+              <span class="text-3xl md:text-5xl leading-none truncate" :style="{ fontFamily: `${f.css}, sans-serif` }">{{ marca.nome }}</span>
               <span class="text-sm aberto shrink-0 hidden sm:block">{{ f.nome }}</span>
             </button>
           </div>

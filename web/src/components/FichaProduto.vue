@@ -76,12 +76,12 @@ async function arquivar() {
 <template>
   <Tela :rotulo="produto.nome" @fechar="emit('fechar')">
     <div class="max-w-3xl mx-auto px-5 md:px-10 pt-20 pb-40">
-      <input v-model="form.nome" aria-label="Nome" class="w-full bg-transparent regua outline-none text-4xl md:text-6xl pb-3 uppercase font-bold text-tinta" />
+      <input v-model="form.nome" aria-label="Nome" class="w-full bg-transparent regua outline-none text-3xl md:text-5xl pb-3 font-medium text-tinta" />
 
       <div class="flex flex-wrap items-baseline gap-x-6 gap-y-3 mt-6 text-xl">
         <label class="flex items-baseline gap-2">
           <span class="fraco">R$</span>
-          <input v-model="form.preco" type="number" step="0.01" min="0" aria-label="Preço" class="w-28 bg-transparent regua outline-none text-3xl font-bold numero text-tinta" />
+          <input v-model="form.preco" type="number" step="0.01" min="0" aria-label="Preço" class="w-28 bg-transparent regua outline-none text-3xl font-medium numero text-tinta" />
         </label>
         <button
           v-for="c in categorias"
@@ -94,7 +94,7 @@ async function arquivar() {
 
       <h2 class="text-2xl mt-14 mb-2">Leva</h2>
       <div v-for="(l, i) in form.ficha" :key="l.insumoId" class="flex items-baseline gap-4 py-3 regua-fina">
-        <input v-model="l.quantidade" type="number" step="any" min="0" placeholder="0" :aria-label="`Quantidade de ${porId.get(l.insumoId)?.nome}`" class="w-24 bg-transparent outline-none text-2xl font-bold numero text-right text-tinta" />
+        <input v-model="l.quantidade" type="number" step="any" min="0" placeholder="0" :aria-label="`Quantidade de ${porId.get(l.insumoId)?.nome}`" class="w-24 bg-transparent outline-none text-2xl font-medium numero text-right text-tinta" />
         <span class="w-10 fraco">{{ porId.get(l.insumoId)?.unidade }}</span>
         <span class="flex-1 truncate text-lg">{{ porId.get(l.insumoId)?.nome }}</span>
         <span class="fraco numero">{{ brl((Number(l.quantidade) || 0) * (porId.get(l.insumoId)?.custoUnitario ?? 0)) }}</span>
@@ -109,7 +109,7 @@ async function arquivar() {
         <input v-model="novo.custoUnitario" type="number" step="any" min="0" class="campo w-36" :placeholder="`R$ por ${novo.unidade}`" aria-label="Custo" />
         <button class="bloco h-14 px-6 aberto" :disabled="!novo.nome" @click="criarInsumo">Criar</button>
       </div>
-      <select v-else class="mt-4 bg-transparent text-lg aberto text-tinta outline-none cursor-pointer uppercase font-bold" :value="''" aria-label="Adicionar insumo" @change="adicionar($event.target.value); $event.target.value = ''">
+      <select v-else class="mt-4 bg-transparent text-lg aberto text-tinta outline-none cursor-pointer font-medium" :value="''" aria-label="Adicionar insumo" @change="adicionar($event.target.value); $event.target.value = ''">
         <option value="" disabled>+ insumo</option>
         <option v-for="i in livres" :key="i.id" :value="i.id">{{ i.nome }}</option>
         <option value="novo">+ novo insumo</option>

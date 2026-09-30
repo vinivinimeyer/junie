@@ -1,30 +1,30 @@
 /**
- * Motor de white label. Segue a gramática do Logico: duas cores e nada mais.
- * O chão é preto ou branco puro, e a cor da marca É a tinta (texto, réguas,
- * botões), como o azul #0000ff do Logico. Quando a cor da marca não tem
- * contraste para ser texto, ela é clareada/escurecida no mesmo tom.
+ * Motor de white label. A interface é quieta: chão preto (ou branco), texto
+ * neutro em dois níveis e superfícies em pílula. A cor da marca mora nos
+ * orbes, no brilho do horizonte atrás do painel e nas telas cheias (Pix).
  */
 
 export const FONTES = [
+  { nome: 'Host Grotesk', css: "'Host Grotesk'", google: 'Host+Grotesk:wght@400;500;600' },
   // DIN 2014 vem do kit Adobe do Logico (index.html); Barlow é o substituto aberto mais próximo.
-  { nome: 'DIN 2014', css: "'din-2014', 'Barlow'", google: 'Barlow:wght@600;700' },
-  { nome: 'Archivo', css: "'Archivo'", google: 'Archivo:wght@600;700;800' },
-  { nome: 'Space Grotesk', css: "'Space Grotesk'", google: 'Space+Grotesk:wght@500;700' },
-  { nome: 'IBM Plex Mono', css: "'IBM Plex Mono'", google: 'IBM+Plex+Mono:wght@500;700' },
-  { nome: 'Fraunces', css: "'Fraunces'", google: 'Fraunces:opsz,wght@9..144,600;9..144,700' },
+  { nome: 'DIN 2014', css: "'din-2014', 'Barlow'", google: 'Barlow:wght@400;500;600' },
+  { nome: 'Archivo', css: "'Archivo'", google: 'Archivo:wght@400;500;600' },
+  { nome: 'Space Grotesk', css: "'Space Grotesk'", google: 'Space+Grotesk:wght@400;500;600' },
+  { nome: 'IBM Plex Mono', css: "'IBM Plex Mono'", google: 'IBM+Plex+Mono:wght@400;500;600' },
+  { nome: 'Fraunces', css: "'Fraunces'", google: 'Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600' },
 ]
 
-export const CANTOS = { reto: '0px', suave: '10px', redondo: '999px' }
+export const CANTOS = { reto: '0px', suave: '14px', redondo: '999px' }
 
 export const CORES = ['#0000FF', '#FF4F1F', '#0B6E4F', '#6B2E1F', '#C2185B', '#111111', '#7A5CFF', '#E0A400']
 
 export const MARCA_JUNIE = {
   nome: 'Junie',
-  corPrimaria: '#0000FF',
-  corDestaque: '#FF4F1F',
+  corPrimaria: '#3B4BD8',
+  corDestaque: '#FF6A2B',
   tema: 'escuro',
-  fonte: 'DIN 2014',
-  cantos: 'reto',
+  fonte: 'Host Grotesk',
+  cantos: 'redondo',
   logo: null,
   logoEscala: 1,
   logoX: 0,
@@ -82,8 +82,9 @@ const trio = (hex) => hexParaRgb(hex).join(' ')
 
 export function paleta(marca) {
   const m = { ...MARCA_JUNIE, ...marca }
-  const chao = m.tema === 'escuro' ? '#000000' : '#FFFFFF'
-  return { chao, tinta: legivelSobre(m.corPrimaria, chao), marca: m.corPrimaria, destaque: m.corDestaque }
+  const escuro = m.tema === 'escuro'
+  const chao = escuro ? '#000000' : '#FFFFFF'
+  return { chao, tinta: escuro ? '#F2F2F3' : '#111113', marca: m.corPrimaria, destaque: legivelSobre(m.corDestaque, chao, 3) }
 }
 
 export function variaveisDoTema(marca) {
@@ -98,8 +99,8 @@ export function variaveisDoTema(marca) {
     '--destaque': trio(p.destaque),
     '--destaque-tinta': trio(tintaPara(p.destaque)),
     '--perigo': trio(m.tema === 'escuro' ? '#FF5A4E' : '#D11A0A'),
-    '--raio': CANTOS[m.cantos] ?? '0px',
-    '--fonte': `${fonte.css}, 'Barlow', system-ui, sans-serif`,
+    '--raio': CANTOS[m.cantos] ?? CANTOS.redondo,
+    '--fonte': `${fonte.css}, 'Host Grotesk', system-ui, sans-serif`,
   }
 }
 
