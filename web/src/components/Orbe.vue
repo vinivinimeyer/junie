@@ -78,7 +78,7 @@ const deslocamento = computed(() => `${((props.semente * 37) % 9) - 4}%`)
 .aro {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 20;
   border-radius: inherit;
   pointer-events: none;
   box-shadow:

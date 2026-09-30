@@ -9,9 +9,9 @@ const carregando = ref(true)
 const agora = ref(Date.now())
 
 const COLUNAS = [
-  { status: 'novo', titulo: 'Na fila', proximo: 'preparando' },
-  { status: 'preparando', titulo: 'Fazendo', proximo: 'pronto' },
-  { status: 'pronto', titulo: 'Pronto', proximo: 'entregue' },
+  { status: 'novo', titulo: 'Na fila', proximo: 'preparando', acao: 'Começar' },
+  { status: 'preparando', titulo: 'Fazendo', proximo: 'pronto', acao: 'Marcar pronto' },
+  { status: 'pronto', titulo: 'Pronto', proximo: 'entregue', acao: 'Entregar' },
 ]
 const por = computed(() => Object.fromEntries(COLUNAS.map((c) => [c.status, itens.value.filter((i) => i.status === c.status)])))
 
@@ -53,18 +53,22 @@ const mesa = (i) => i.mesa?.nomeCliente || i.mesa?.rotulo || `Mesa ${i.mesa?.num
 <template>
   <div class="flex-1 px-5 md:px-8 pt-8 pb-16 grid md:grid-cols-3 gap-10 md:gap-8 items-start">
     <section v-for="col in COLUNAS" :key="col.status">
-      <h2 class="regua text-2xl md:text-3xl pb-3 flex justify-between">
-        <span>{{ col.titulo }}</span><span class="numero" :class="!por[col.status].length && 'apagado'">{{ por[col.status].length }}</span>
+      <h2 class="text-xl md:text-2xl px-2 pb-4 flex justify-between items-baseline">
+        <span>{{ col.titulo }}</span><span class="numero text-[15px]" :class="por[col.status].length ? 'fraco' : 'apagado'">{{ por[col.status].length }}</span>
       </h2>
-      <p v-if="!carregando && !por[col.status].length" class="apagado py-6 text-lg">—</p>
-      <TransitionGroup name="surge" tag="ul">
+      <div v-if="carregando" class="flex flex-col gap-1.5" aria-busy="true">
+        <div v-for="n in 3" :key="n" class="brilho h-24 rounded-[min(var(--raio),1.75rem)]" :style="{ '--i': n, opacity: 1 - n * 0.2 }" />
+      </div>
+      <p v-else-if="!por[col.status].length" class="apagado px-2 py-4 text-[15px]">Nada por aqui.</p>
+      <TransitionGroup name="surge" tag="ul" class="flex flex-col gap-1.5">
         <li v-for="i in por[col.status]" :key="i.id">
-          <button class="palavra w-full py-5 regua-fina" :aria-label="`${i.quantidade} ${i.produto?.nome}, ${mesa(i)}: marcar como ${col.proximo}`" @click="avancar(i, col.proximo)">
-            <span class="flex justify-between text-sm" :class="minutos(i.createdAt) > 15 && col.status !== 'pronto' ? 'text-perigo' : 'fraco'">
+          <button class="pilula w-full px-5 py-4 text-left rounded-[min(var(--raio),1.75rem)]" :aria-label="`${i.quantidade} ${i.produto?.nome}, ${mesa(i)}: marcar como ${col.proximo}`" @click="avancar(i, col.proximo)">
+            <span class="flex justify-between text-[13px]" :class="minutos(i.createdAt) > 15 && col.status !== 'pronto' ? 'text-perigo' : 'fraco'">
               <span class="truncate">{{ mesa(i) }}</span><span class="numero shrink-0">{{ minutos(i.createdAt) }} min</span>
             </span>
-            <span class="block text-2xl md:text-3xl leading-tight mt-1"><span class="numero">{{ i.quantidade }}</span> {{ i.produto?.nome }}</span>
-            <span v-if="i.observacao" class="block text-destaque text-lg mt-1">{{ i.observacao }}</span>
+            <span class="block text-lg md:text-xl leading-tight mt-1"><span class="numero">{{ i.quantidade }}×</span> {{ i.produto?.nome }}</span>
+            <span v-if="i.observacao" class="block text-destaque text-[15px] mt-1">{{ i.observacao }}</span>
+            <span class="block apagado text-[13px] mt-2">{{ col.acao }} →</span>
           </button>
         </li>
       </TransitionGroup>

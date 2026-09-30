@@ -67,7 +67,7 @@ async function fechar(forma) {
     <p class="fraco mb-8 numero">{{ brl(emAberto) }} em aberto</p>
 
     <div v-if="carregando" class="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-6" aria-busy="true">
-      <div v-for="n in 8" :key="n" class="aspect-square rounded-full vidro-disco" />
+      <div v-for="n in 8" :key="n" class="aspect-square rounded-full brilho" :style="{ '--i': n }" />
     </div>
     <p v-else-if="!mesas.length" class="text-2xl">
       Sem mesas. <RouterLink to="/configurar" class="palavra underline underline-offset-8 decoration-4">Criar mesas</RouterLink>

@@ -8,6 +8,7 @@ import { hexParaRgb } from '../lib/theme'
 import Orbe from '../components/Orbe.vue'
 import Palavras from '../components/Palavras.vue'
 import Vaso from '../components/Vaso.vue'
+import Pontos from '../components/Pontos.vue'
 
 const router = useRouter()
 const criando = ref(false)
@@ -147,7 +148,7 @@ async function demonstracao() {
           <!-- esferas: a marca pensando e o dia em número -->
           <div class="relative mt-2 md:mt-8 flex items-center entra" style="--i: 2">
             <Orbe :marca="marca" :semente="atual" tamanho="min(62vw, 42vh, 22rem)">
-              <span class="pontos mb-3" aria-hidden="true"><i v-for="n in 8" :key="n" :style="{ '--n': n }" /></span>
+              <Pontos class="mb-3" />
               <Transition name="surge" mode="out-in">
                 <span :key="momento" class="text-[clamp(0.8rem,3.4cqw,1rem)]">{{ TURNOS[momento].status }}</span>
               </Transition>
@@ -292,34 +293,3 @@ async function demonstracao() {
     </div>
   </div>
 </template>
-
-<style scoped>
-.pontos {
-  position: relative;
-  width: 1.25rem;
-  height: 1.25rem;
-  display: block;
-  animation: roda 1.6s steps(8) infinite;
-}
-.pontos i {
-  position: absolute;
-  inset: 0;
-  transform: rotate(calc(var(--n) * 45deg));
-}
-.pontos i::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 2.5px;
-  height: 2.5px;
-  margin-left: -1.25px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: calc(0.2 + var(--n) * 0.1);
-}
-@keyframes roda { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) {
-  .pontos { animation: none; }
-}
-</style>

@@ -83,6 +83,39 @@
   .campo::placeholder { color: rgb(var(--tinta) / 0.4); }
   .campo:focus-visible { outline: none; border-color: rgb(var(--tinta) / 0.35); background: rgb(var(--tinta) / 0.09); }
 
+  /* Texto longo (quadro de cardápio, notas): nunca em pílula, senão corta as linhas. */
+  .quadro {
+    @apply w-full bg-transparent text-tinta outline-none resize-none;
+    border-radius: min(var(--raio), 1.75rem);
+    background: rgb(var(--tinta) / 0.045);
+    box-shadow: inset 0 0 0 1px rgb(var(--tinta) / 0.1);
+    caret-color: rgb(var(--destaque));
+    transition: box-shadow 200ms var(--ease-out), background-color 200ms var(--ease-out);
+  }
+  .quadro::placeholder { color: rgb(var(--tinta) / 0.32); }
+  .quadro:focus-visible { background: rgb(var(--tinta) / 0.065); box-shadow: inset 0 0 0 1.5px rgb(var(--tinta) / 0.4); }
+
+  .bloco .seta-bloco { display: inline-block; transition: transform 200ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .bloco:hover .seta-bloco { transform: translateX(4px); }
+  }
+
+  /* Esqueleto de carregamento: a luz passa devagar por cima. */
+  .brilho {
+    position: relative;
+    overflow: hidden;
+    background: rgb(var(--tinta) / 0.06);
+  }
+  .brilho::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(var(--tinta) / 0.07), transparent);
+    animation: brilho 1.5s var(--ease-in-out, ease-in-out) infinite;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+
   /*
    * Moldura: o horizonte ao entardecer, tingido pela marca. No celular o
    * painel ocupa a tela inteira e a moldura não aparece.
@@ -170,6 +203,14 @@
     }
   }
 }
+
+@keyframes brilho { to { transform: translateX(100%); } }
+
+/* Linhas que aparecem conforme se escreve (quadros, listas). */
+.linha-enter-active { transition: opacity 0.28s var(--ease-out), transform 0.28s var(--ease-out); }
+.linha-leave-active { transition: opacity 0.16s var(--ease-out); }
+.linha-enter-from { opacity: 0; transform: translateX(-6px); }
+.linha-leave-to { opacity: 0; }
 
 .treme { animation: treme 420ms var(--ease-out); }
 @keyframes treme {

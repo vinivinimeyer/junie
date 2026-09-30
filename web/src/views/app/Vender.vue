@@ -127,7 +127,7 @@ async function lancar(mesa, nome) {
     </p>
 
     <div v-if="carregando" class="space-y-2 pt-4" aria-busy="true">
-      <div v-for="n in 5" :key="n" class="pilula h-[4.5rem]" />
+      <div v-for="n in 5" :key="n" class="brilho rounded-full h-[4.5rem]" :style="{ '--i': n, opacity: 1 - n * 0.14 }" />
     </div>
     <p v-else-if="!produtos.length" class="text-xl pt-10">
       Nada no cardápio ainda. <RouterLink to="/app/cardapio" class="palavra underline underline-offset-4">Escrever cardápio</RouterLink>

@@ -81,7 +81,7 @@ function depoisDeSalvar() {
 <template>
   <div class="flex-1 px-5 md:px-8 pt-8 pb-16">
     <p v-if="visao" class="text-2xl md:text-4xl leading-tight max-w-[34ch] mb-10" style="text-wrap: balance">{{ frase }}</p>
-    <div v-else class="h-24 max-w-xl bg-tinta/10 mb-10" />
+    <div v-else class="max-w-xl mb-10 flex flex-col gap-3" aria-busy="true"><div class="brilho rounded-full h-8 w-full" /><div class="brilho rounded-full h-8 w-4/5" style="--i: 1" /><div class="brilho rounded-full h-8 w-3/5" style="--i: 2" /></div>
 
     <Palavras v-model="aba" :itens="abas" class="mb-8" />
 

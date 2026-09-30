@@ -27,6 +27,43 @@ export function lerLogo(arquivo, max = 480) {
 }
 
 /**
+ * Prepara a logo para o círculo. Com fundo chapado (os quatro cantos opacos e
+ * da mesma cor), o fundo é estendido num quadrado grande o bastante para a
+ * arte inteira caber no círculo: preenchendo, não sobra borda nem corta letra.
+ * `preenche` diz se vale abrir preenchendo o círculo.
+ */
+export function prepararLogo(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onerror = () => resolve({ logo: dataUrl, razao: 1, preenche: false })
+    img.onload = () => {
+      const w = img.naturalWidth || 1
+      const h = img.naturalHeight || 1
+      const amostra = document.createElement('canvas')
+      amostra.width = w
+      amostra.height = h
+      const ctx = amostra.getContext('2d', { willReadFrequently: true })
+      ctx.drawImage(img, 0, 0, w, h)
+      const cantos = [[1, 1], [w - 2, 1], [1, h - 2], [w - 2, h - 2]].map(([x, y]) => ctx.getImageData(Math.max(0, x), Math.max(0, y), 1, 1).data)
+      const opacos = cantos.every((c) => c[3] > 240)
+      const parecidos = cantos.every((c) => Math.abs(c[0] - cantos[0][0]) + Math.abs(c[1] - cantos[0][1]) + Math.abs(c[2] - cantos[0][2]) < 36)
+      if (!opacos || !parecidos) return resolve({ logo: dataUrl, razao: h / w, preenche: false })
+
+      const lado = Math.ceil(Math.hypot(w, h) * 1.04)
+      const quadrado = document.createElement('canvas')
+      quadrado.width = lado
+      quadrado.height = lado
+      const q = quadrado.getContext('2d')
+      q.fillStyle = `rgb(${cantos[0][0]}, ${cantos[0][1]}, ${cantos[0][2]})`
+      q.fillRect(0, 0, lado, lado)
+      q.drawImage(img, (lado - w) / 2, (lado - h) / 2, w, h)
+      resolve({ logo: quadrado.toDataURL('image/png'), razao: 1, preenche: true })
+    }
+    img.src = dataUrl
+  })
+}
+
+/**
  * Sugere cores a partir da logo: agrupa os pixels em "baldes" de cor,
  * ignora transparente, quase-branco e cinzas, e devolve as mais frequentes
  * que sejam visivelmente diferentes entre si.
